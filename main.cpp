@@ -1,6 +1,17 @@
+/***************************************************************************
+ * pass key gen                                                            *
+ * Copyright (C) 2022 by Warej                                             *
+ *   ware.j@protonmail.com                                                 *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ ***************************************************************************/
 
 #include <iostream>
 #include <ctime>
+#include <vector>
 #include <random>
 #include <vector>
 #include <sstream>
@@ -10,10 +21,9 @@ using namespace std;
 
 vector<char> passkey;
 
-const char lower[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
-const char upper[] = {'Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M'};
-const char num[] = {'1','2','3','4','5','6','7','8','9','0'};
-const char spec[] = {'!','@','#','$','%','^','&','*','?','<','>'};
+vector <char> myChars {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n',
+'m','Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M',
+'!','@','#','$','%','^','&','*','?','<','>','1','2','3','4','5','6','7','8','9','0'};
 
 void helpCommand() {
     cout<< "\n" << "Help page for the Passkey Generator"<< endl;
@@ -59,48 +69,59 @@ void art() {
 
 }
 
-
+random_device rd;
 
 int main (int argc, char *argv[]) {
-
+    srand ( time(NULL) );
+    cout << "Debug myChars vector length: " << size(myChars) << "\n";
+    //Check that some params have been passed
     //will error if no params are given
 	if (argc <= 1)
 	{
 		if (argv[0])
-			std::cout << "Usage: " << argv[0] << " <number>" << '\n';
+			cout << "Usage: " << argv[0] << " <number>" << '\n';
 		else
-			std::cout << "Usage: <program name> <number>" << '\n';
+			cout << "Usage: <program name> <number>" << '\n';
 
 		return 1;
 	}
 
-	std::stringstream convert{ argv[1] }; // set up a stringstream variable named convert, initialized with the input from argv[1]
+    //converts char to int
+	stringstream convert{ argv[1] }; // set up a stringstream variable named convert, initialized with the input from argv[1]
 
 	int myint{};
 	if (!(convert >> myint)) // do the conversion
 		myint = 0; // if conversion fails, set myint to a default value
 
-	std::cout << "Got integer: " << myint << '\n';
+	cout << "Got integer: " << myint << '\n';
+    for(auto i=1 ; i <= myint ; i++) {
+        auto num = rd() % size(myChars) + 0;
+        passkey.push_back(num);
+        cout << "added "<<num<<"\n";
 
+    }
+    cout <<passkey;
+    for(auto i: passkey)
+    cout<<i;
 
-
-
-    // if(argc > 1) {
-    //     for(int i = 0 ; i <= argc ; i++) {
-    //         if (*argv[i] == 'H'){
-    //             helpCommand();
-    //         }
-    //         if (*argv[i] == 'A'){
-    //             art();
-    //         }
-    //         if (*argv[i] == 'Q') {
-    //             cout<<"There is an Q in the command"<< endl;
-    //         } else {
-    //             //cout<<argv*5;
-    //         }
-    //     }
-    // }
+    if(argc > 1) {
+        for(int i = 0 ; i <= argc ; i++) {
+            if (*argv[i] == 'H'){
+                helpCommand();
+            }
+            if (*argv[i] == 'A'){
+                art();
+            }
+            if (*argv[i] == 'Q') {
+                cout<<"There is an Q in the command"<< endl;
+            } else {
+                
+            }
+        }
+    }
+        
 
     return 0;
 }
-//cout<<""<< endl;
+
+    
